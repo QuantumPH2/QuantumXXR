@@ -1,6 +1,6 @@
 local Scripts = {
     [92416421522960]  = { name = "Slime RNG",        url = "https://raw.githubusercontent.com/QuantumPH2/SlimeRNG/refs/heads/main/.lua" },
-    [121864768012064] = { name = "Fish It",          url = "https://raw.githubusercontent.com/QuantumPH2/LibraryQH/refs/heads/main/fishdih.lua" },
+    [121864768012064] = { name = "Fish It",          url = "https://raw.githubusercontent.com/QuantumPH2/QuantumXXR/refs/heads/main/FishIt.lua" },
     [93978595733734]  = { name = "Violence District", url = "https://raw.githubusercontent.com/QuantumPH2/ViolenceDistrict/refs/heads/main/VD.lua" },
     [126884695634066] = { name = "QH Community",     url = "https://raw.githubusercontent.com/zerotheking152-png/QuantumGAG/main/QHCommunity.lua" },
     [83369512629707]  = { name = "Quantum Sawah",    url = "https://raw.githubusercontent.com/zerotheking152-png/QuantumSAWAH/refs/heads/main/Community.lua" },
