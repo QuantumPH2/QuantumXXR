@@ -1,18 +1,18 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
+local HttpService = game:GetService("HttpService")
 
 local player = Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
 
 local KeySystem = {}
+
 KeySystem.Config = {
     Key = "PREMIUM-2026-X7K9",
     Title = "Premium Key System",
     Subtitle = "Enter your premium key to continue.",
-    GetKeyUrl = "https://discord.gg/example",
-    Size = UDim2.new(0, 420, 0, 520),
+    Size = UDim2.new(0, 380, 0, 500),
     MainColor = Color3.fromHex("#22C55E"),
     BackgroundColor = Color3.fromHex("#0D1117"),
     ErrorColor = Color3.fromRGB(239, 68, 68),
@@ -54,7 +54,7 @@ function KeySystem:Create()
 
     local topGlow = Instance.new("Frame")
     topGlow.Name = "TopGlow"
-    topGlow.Size = UDim2.new(1, 0, 0, 2)
+    topGlow.Size = UDim2.new(1, 0, 0, 3)
     topGlow.Position = UDim2.new(0, 0, 0, 0)
     topGlow.BackgroundColor3 = KeySystem.Config.MainColor
     topGlow.BorderSizePixel = 0
@@ -62,11 +62,16 @@ function KeySystem:Create()
 
     local topGlowGradient = Instance.new("UIGradient")
     topGlowGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, KeySystem.Config.MainColor),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(100, 255, 150)),
-        ColorSequenceKeypoint.new(1, KeySystem.Config.MainColor),
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 100, 40)),
+        ColorSequenceKeypoint.new(0.3, KeySystem.Config.MainColor),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(150, 255, 180)),
+        ColorSequenceKeypoint.new(0.7, KeySystem.Config.MainColor),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 100, 40)),
     })
+    topGlowGradient.Offset = Vector2.new(-1, 0)
     topGlowGradient.Parent = topGlow
+
+    TweenService:Create(topGlowGradient, TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true), {Offset = Vector2.new(1, 0)}):Play()
 
     local ambientGlow = Instance.new("ImageLabel")
     ambientGlow.Name = "AmbientGlow"
@@ -118,69 +123,131 @@ function KeySystem:Create()
 
     local content = Instance.new("Frame")
     content.Name = "Content"
-    content.Size = UDim2.new(1, -48, 1, -48)
-    content.Position = UDim2.new(0, 24, 0, 24)
+    content.Size = UDim2.new(1, -44, 1, -44)
+    content.Position = UDim2.new(0, 22, 0, 22)
     content.BackgroundTransparency = 1
     content.Parent = mainFrame
 
-    local logoContainer = Instance.new("Frame")
-    logoContainer.Name = "LogoContainer"
-    logoContainer.Size = UDim2.new(0, 64, 0, 64)
-    logoContainer.Position = UDim2.new(0.5, 0, 0, 0)
-    logoContainer.AnchorPoint = Vector2.new(0.5, 0)
-    logoContainer.BackgroundColor3 = KeySystem.Config.MainColor
-    logoContainer.BackgroundTransparency = 0.85
-    logoContainer.BorderSizePixel = 0
-    logoContainer.Parent = content
+    local avatarContainer = Instance.new("Frame")
+    avatarContainer.Name = "AvatarContainer"
+    avatarContainer.Size = UDim2.new(0, 72, 0, 72)
+    avatarContainer.Position = UDim2.new(0.5, 0, 0, 0)
+    avatarContainer.AnchorPoint = Vector2.new(0.5, 0)
+    avatarContainer.BackgroundColor3 = KeySystem.Config.MainColor
+    avatarContainer.BackgroundTransparency = 0.8
+    avatarContainer.BorderSizePixel = 0
+    avatarContainer.Parent = content
 
-    local logoCorner = Instance.new("UICorner")
-    logoCorner.CornerRadius = UDim.new(1, 0)
-    logoCorner.Parent = logoContainer
+    local avatarCorner = Instance.new("UICorner")
+    avatarCorner.CornerRadius = UDim.new(1, 0)
+    avatarCorner.Parent = avatarContainer
 
-    local logoStroke = Instance.new("UIStroke")
-    logoStroke.Color = KeySystem.Config.MainColor
-    logoStroke.Thickness = 1.5
-    logoStroke.Transparency = 0.4
-    logoStroke.Parent = logoContainer
+    local avatarStroke = Instance.new("UIStroke")
+    avatarStroke.Color = KeySystem.Config.MainColor
+    avatarStroke.Thickness = 2
+    avatarStroke.Transparency = 0.3
+    avatarStroke.Parent = avatarContainer
 
-    local logoIcon = Instance.new("ImageLabel")
-    logoIcon.Name = "LogoIcon"
-    logoIcon.Size = UDim2.new(0, 32, 0, 32)
-    logoIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    logoIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-    logoIcon.BackgroundTransparency = 1
-    logoIcon.Image = "rbxassetid://7733965386"
-    logoIcon.ImageColor3 = KeySystem.Config.MainColor
-    logoIcon.Parent = logoContainer
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Name = "AvatarImage"
+    avatarImage.Size = UDim2.new(1, -8, 1, -8)
+    avatarImage.Position = UDim2.new(0.5, 0, 0.5, 0)
+    avatarImage.AnchorPoint = Vector2.new(0.5, 0.5)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    avatarImage.Parent = avatarContainer
+
+    local avatarInnerCorner = Instance.new("UICorner")
+    avatarInnerCorner.CornerRadius = UDim.new(1, 0)
+    avatarInnerCorner.Parent = avatarImage
+
+    local statusDot = Instance.new("Frame")
+    statusDot.Name = "StatusDot"
+    statusDot.Size = UDim2.new(0, 14, 0, 14)
+    statusDot.Position = UDim2.new(1, -7, 1, -7)
+    statusDot.AnchorPoint = Vector2.new(1, 1)
+    statusDot.BackgroundColor3 = KeySystem.Config.MainColor
+    statusDot.BorderSizePixel = 0
+    statusDot.Parent = avatarContainer
+
+    local statusDotCorner = Instance.new("UICorner")
+    statusDotCorner.CornerRadius = UDim.new(1, 0)
+    statusDotCorner.Parent = statusDot
+
+    local statusDotStroke = Instance.new("UIStroke")
+    statusDotStroke.Color = KeySystem.Config.BackgroundColor
+    statusDotStroke.Thickness = 2.5
+    statusDotStroke.Parent = statusDot
+
+    local displayName = player.DisplayName
+    local censoredName = displayName
+    if #displayName > 2 then
+        censoredName = displayName:sub(1, 1) .. string.rep("*", #displayName - 2) .. displayName:sub(-1)
+    elseif #displayName == 2 then
+        censoredName = displayName:sub(1, 1) .. "*"
+    end
+
+    local nameLabel = Instance.new("TextLabel")
+    nameLabel.Name = "PlayerName"
+    nameLabel.Size = UDim2.new(1, 0, 0, 22)
+    nameLabel.Position = UDim2.new(0, 0, 0, 84)
+    nameLabel.BackgroundTransparency = 1
+    nameLabel.Text = censoredName
+    nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameLabel.TextSize = 16
+    nameLabel.Font = Enum.Font.GothamBold
+    nameLabel.TextXAlignment = Enum.TextXAlignment.Center
+    nameLabel.Parent = content
+
+    local usernameLabel = Instance.new("TextLabel")
+    usernameLabel.Name = "Username"
+    usernameLabel.Size = UDim2.new(1, 0, 0, 16)
+    usernameLabel.Position = UDim2.new(0, 0, 0, 106)
+    usernameLabel.BackgroundTransparency = 1
+    usernameLabel.Text = "@" .. player.Name
+    usernameLabel.TextColor3 = Color3.fromRGB(120, 130, 140)
+    usernameLabel.TextSize = 12
+    usernameLabel.Font = Enum.Font.Gotham
+    usernameLabel.TextXAlignment = Enum.TextXAlignment.Center
+    usernameLabel.Parent = content
+
+    local divider = Instance.new("Frame")
+    divider.Name = "Divider"
+    divider.Size = UDim2.new(0.3, 0, 0, 1)
+    divider.Position = UDim2.new(0.5, 0, 0, 134)
+    divider.AnchorPoint = Vector2.new(0.5, 0)
+    divider.BackgroundColor3 = Color3.fromRGB(50, 60, 70)
+    divider.BorderSizePixel = 0
+    divider.Parent = content
 
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, 0, 0, 32)
-    title.Position = UDim2.new(0, 0, 0, 80)
+    title.Size = UDim2.new(1, 0, 0, 28)
+    title.Position = UDim2.new(0, 0, 0, 148)
     title.BackgroundTransparency = 1
     title.Text = KeySystem.Config.Title
     title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.TextSize = 26
+    title.TextSize = 22
     title.Font = Enum.Font.GothamBold
     title.TextXAlignment = Enum.TextXAlignment.Center
     title.Parent = content
 
     local subtitle = Instance.new("TextLabel")
     subtitle.Name = "Subtitle"
-    subtitle.Size = UDim2.new(1, 0, 0, 20)
-    subtitle.Position = UDim2.new(0, 0, 0, 116)
+    subtitle.Size = UDim2.new(1, 0, 0, 18)
+    subtitle.Position = UDim2.new(0, 0, 0, 178)
     subtitle.BackgroundTransparency = 1
     subtitle.Text = KeySystem.Config.Subtitle
     subtitle.TextColor3 = Color3.fromRGB(150, 160, 170)
-    subtitle.TextSize = 14
+    subtitle.TextSize = 13
     subtitle.Font = Enum.Font.Gotham
     subtitle.TextXAlignment = Enum.TextXAlignment.Center
     subtitle.Parent = content
 
     local inputContainer = Instance.new("Frame")
     inputContainer.Name = "InputContainer"
-    inputContainer.Size = UDim2.new(1, 0, 0, 52)
-    inputContainer.Position = UDim2.new(0, 0, 0, 170)
+    inputContainer.Size = UDim2.new(1, 0, 0, 48)
+    inputContainer.Position = UDim2.new(0, 0, 0, 216)
     inputContainer.BackgroundColor3 = Color3.fromRGB(20, 25, 32)
     inputContainer.BackgroundTransparency = 0.3
     inputContainer.BorderSizePixel = 0
@@ -198,8 +265,8 @@ function KeySystem:Create()
 
     local keyIcon = Instance.new("ImageLabel")
     keyIcon.Name = "KeyIcon"
-    keyIcon.Size = UDim2.new(0, 20, 0, 20)
-    keyIcon.Position = UDim2.new(0, 16, 0.5, 0)
+    keyIcon.Size = UDim2.new(0, 18, 0, 18)
+    keyIcon.Position = UDim2.new(0, 14, 0.5, 0)
     keyIcon.AnchorPoint = Vector2.new(0, 0.5)
     keyIcon.BackgroundTransparency = 1
     keyIcon.Image = "rbxassetid://7733955511"
@@ -208,44 +275,38 @@ function KeySystem:Create()
 
     local textBox = Instance.new("TextBox")
     textBox.Name = "KeyInput"
-    textBox.Size = UDim2.new(1, -56, 1, 0)
-    textBox.Position = UDim2.new(0, 44, 0, 0)
+    textBox.Size = UDim2.new(1, -52, 1, 0)
+    textBox.Position = UDim2.new(0, 40, 0, 0)
     textBox.BackgroundTransparency = 1
     textBox.Text = ""
     textBox.PlaceholderText = "Enter your key..."
     textBox.PlaceholderColor3 = Color3.fromRGB(100, 110, 120)
     textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-    textBox.TextSize = 15
+    textBox.TextSize = 14
     textBox.Font = Enum.Font.Gotham
     textBox.ClearTextOnFocus = false
     textBox.TextXAlignment = Enum.TextXAlignment.Left
     textBox.Parent = inputContainer
 
     textBox.Focused:Connect(function()
-        TweenService:Create(inputStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {
-            Color = KeySystem.Config.MainColor,
-            Transparency = 0.3,
-        }):Play()
+        TweenService:Create(inputStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Color = KeySystem.Config.MainColor, Transparency = 0.3}):Play()
         TweenService:Create(keyIcon, TweenInfo.new(0.25), {ImageColor3 = KeySystem.Config.MainColor}):Play()
     end)
 
     textBox.FocusLost:Connect(function()
-        TweenService:Create(inputStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {
-            Color = Color3.fromRGB(40, 50, 60),
-            Transparency = 0.5,
-        }):Play()
+        TweenService:Create(inputStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quart), {Color = Color3.fromRGB(40, 50, 60), Transparency = 0.5}):Play()
         TweenService:Create(keyIcon, TweenInfo.new(0.25), {ImageColor3 = Color3.fromRGB(120, 130, 140)}):Play()
     end)
 
     local verifyBtn = Instance.new("TextButton")
     verifyBtn.Name = "VerifyButton"
-    verifyBtn.Size = UDim2.new(1, 0, 0, 48)
-    verifyBtn.Position = UDim2.new(0, 0, 0, 242)
+    verifyBtn.Size = UDim2.new(1, 0, 0, 44)
+    verifyBtn.Position = UDim2.new(0, 0, 0, 280)
     verifyBtn.BackgroundColor3 = KeySystem.Config.MainColor
     verifyBtn.BorderSizePixel = 0
     verifyBtn.Text = "Verify Key"
     verifyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    verifyBtn.TextSize = 15
+    verifyBtn.TextSize = 14
     verifyBtn.Font = Enum.Font.GothamBold
     verifyBtn.AutoButtonColor = false
     verifyBtn.Parent = content
@@ -268,14 +329,14 @@ function KeySystem:Create()
 
     local getKeyBtn = Instance.new("TextButton")
     getKeyBtn.Name = "GetKeyButton"
-    getKeyBtn.Size = UDim2.new(1, 0, 0, 44)
-    getKeyBtn.Position = UDim2.new(0, 0, 0, 302)
+    getKeyBtn.Size = UDim2.new(1, 0, 0, 40)
+    getKeyBtn.Position = UDim2.new(0, 0, 0, 334)
     getKeyBtn.BackgroundColor3 = Color3.fromRGB(20, 25, 32)
     getKeyBtn.BackgroundTransparency = 0.2
     getKeyBtn.BorderSizePixel = 0
     getKeyBtn.Text = "Get Key"
     getKeyBtn.TextColor3 = Color3.fromRGB(180, 190, 200)
-    getKeyBtn.TextSize = 14
+    getKeyBtn.TextSize = 13
     getKeyBtn.Font = Enum.Font.GothamSemibold
     getKeyBtn.AutoButtonColor = false
     getKeyBtn.Parent = content
@@ -292,49 +353,45 @@ function KeySystem:Create()
 
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "Status"
-    statusLabel.Size = UDim2.new(1, 0, 0, 20)
-    statusLabel.Position = UDim2.new(0, 0, 0, 366)
+    statusLabel.Size = UDim2.new(1, 0, 0, 18)
+    statusLabel.Position = UDim2.new(0, 0, 0, 386)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = ""
     statusLabel.TextColor3 = Color3.fromRGB(150, 160, 170)
-    statusLabel.TextSize = 13
+    statusLabel.TextSize = 12
     statusLabel.Font = Enum.Font.Gotham
     statusLabel.TextXAlignment = Enum.TextXAlignment.Center
     statusLabel.Parent = content
 
-    local spinner = Instance.new("Frame")
+    local spinner = Instance.new("ImageLabel")
     spinner.Name = "Spinner"
     spinner.Size = UDim2.new(0, 20, 0, 20)
-    spinner.Position = UDim2.new(0.5, -40, 0.5, -10)
+    spinner.Position = UDim2.new(0.5, -38, 0.5, -10)
+    spinner.AnchorPoint = Vector2.new(0.5, 0.5)
     spinner.BackgroundTransparency = 1
+    spinner.Image = "rbxassetid://3926305904"
+    spinner.ImageRectOffset = Vector2.new(564, 564)
+    spinner.ImageRectSize = Vector2.new(36, 36)
+    spinner.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    spinner.ImageTransparency = 0
     spinner.Visible = false
     spinner.Parent = verifyBtn
 
-    local spinnerCircle = Instance.new("ImageLabel")
-    spinnerCircle.Size = UDim2.new(1, 0, 1, 0)
-    spinnerCircle.BackgroundTransparency = 1
-    spinnerCircle.Image = "rbxassetid://3926305904"
-    spinnerCircle.ImageRectOffset = Vector2.new(404, 484)
-    spinnerCircle.ImageRectSize = Vector2.new(36, 36)
-    spinnerCircle.ImageColor3 = Color3.fromRGB(255, 255, 255)
-    spinnerCircle.Parent = spinner
+    local spinnerTween = TweenService:Create(spinner, TweenInfo.new(0.8, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1), {Rotation = 360})
 
-    local checkmark = Instance.new("Frame")
+    local checkmark = Instance.new("ImageLabel")
     checkmark.Name = "Checkmark"
     checkmark.Size = UDim2.new(0, 20, 0, 20)
-    checkmark.Position = UDim2.new(0.5, -40, 0.5, -10)
+    checkmark.Position = UDim2.new(0.5, -38, 0.5, -10)
+    checkmark.AnchorPoint = Vector2.new(0.5, 0.5)
     checkmark.BackgroundTransparency = 1
+    checkmark.Image = "rbxassetid://3926305904"
+    checkmark.ImageRectOffset = Vector2.new(312, 4)
+    checkmark.ImageRectSize = Vector2.new(24, 24)
+    checkmark.ImageColor3 = Color3.fromRGB(255, 255, 255)
+    checkmark.ImageTransparency = 0
     checkmark.Visible = false
     checkmark.Parent = verifyBtn
-
-    local checkmarkIcon = Instance.new("ImageLabel")
-    checkmarkIcon.Size = UDim2.new(1, 0, 1, 0)
-    checkmarkIcon.BackgroundTransparency = 1
-    checkmarkIcon.Image = "rbxassetid://3926305904"
-    checkmarkIcon.ImageRectOffset = Vector2.new(312, 4)
-    checkmarkIcon.ImageRectSize = Vector2.new(24, 24)
-    checkmarkIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-    checkmarkIcon.Parent = checkmark
 
     local function ripple(btn, x, y)
         local ripple = Instance.new("Frame")
@@ -350,10 +407,7 @@ function KeySystem:Create()
         rc.Parent = ripple
         ripple.Parent = btn
         local targetSize = math.max(btn.AbsoluteSize.X, btn.AbsoluteSize.Y) * 2.5
-        TweenService:Create(ripple, TweenInfo.new(0.6, Enum.EasingStyle.Quart), {
-            Size = UDim2.new(0, targetSize, 0, targetSize),
-            BackgroundTransparency = 1,
-        }):Play()
+        TweenService:Create(ripple, TweenInfo.new(0.6, Enum.EasingStyle.Quart), {Size = UDim2.new(0, targetSize, 0, targetSize), BackgroundTransparency = 1}):Play()
         task.delay(0.6, function()
             ripple:Destroy()
         end)
@@ -403,9 +457,9 @@ function KeySystem:Create()
 
     local function shakeFrame(frame)
         local original = frame.Position
-        local shakeTween = TweenService:Create(frame, TweenInfo.new(0.05, Enum.EasingStyle.Linear), {Position = original + UDim2.new(0, 8, 0, 0)})
-        shakeTween:Play()
-        shakeTween.Completed:Wait()
+        local t1 = TweenService:Create(frame, TweenInfo.new(0.05, Enum.EasingStyle.Linear), {Position = original + UDim2.new(0, 8, 0, 0)})
+        t1:Play()
+        t1.Completed:Wait()
         local t2 = TweenService:Create(frame, TweenInfo.new(0.05, Enum.EasingStyle.Linear), {Position = original + UDim2.new(0, -8, 0, 0)})
         t2:Play()
         t2.Completed:Wait()
@@ -419,47 +473,61 @@ function KeySystem:Create()
     end
 
     local function showSuccess()
-        verifyBtn.Text = ""
+        spinnerTween:Cancel()
         spinner.Visible = false
+        verifyBtn.Text = ""
         checkmark.Visible = true
-        checkmarkIcon.ImageTransparency = 0
+        checkmark.Size = UDim2.new(0, 16, 0, 16)
+        TweenService:Create(checkmark, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(0, 22, 0, 22)}):Play()
+        task.delay(0.15, function()
+            TweenService:Create(checkmark, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 20, 0, 20)}):Play()
+        end)
         statusLabel.Text = "Key verified successfully!"
         statusLabel.TextColor3 = KeySystem.Config.SuccessColor
 
-        TweenService:Create(checkmarkIcon, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Size = UDim2.new(1.3, 0, 1.3, 0)}):Play()
-        task.delay(0.15, function()
-            TweenService:Create(checkmarkIcon, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(1, 0, 1, 0)}):Play()
-        end)
-
-        TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(content, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
-        for _, child in ipairs(content:GetDescendants()) do
-            if child:IsA("GuiObject") and child ~= checkmark and child ~= checkmarkIcon then
-                TweenService:Create(child, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
-                if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-                    TweenService:Create(child, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
-                end
-                if child:IsA("ImageLabel") or child:IsA("ImageButton") then
-                    TweenService:Create(child, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
+        task.delay(0.8, function()
+            local allObjects = {}
+            for _, child in ipairs(mainFrame:GetDescendants()) do
+                if child:IsA("GuiObject") then
+                    table.insert(allObjects, child)
                 end
                 if child:IsA("UIStroke") then
-                    TweenService:Create(child, TweenInfo.new(0.3), {Transparency = 1}):Play()
+                    table.insert(allObjects, child)
+                end
+                if child:IsA("UIGradient") then
+                    table.insert(allObjects, child)
                 end
             end
-        end
-        TweenService:Create(topGlow, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
-        TweenService:Create(ambientGlow, TweenInfo.new(0.3), {ImageTransparency = 1}):Play()
-        TweenService:Create(stroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
-        TweenService:Create(blur, TweenInfo.new(0.5), {Size = 0}):Play()
 
-        task.delay(0.6, function()
-            screenGui:Destroy()
-            blur:Destroy()
+            for _, obj in ipairs(allObjects) do
+                if obj:IsA("TextLabel") or obj:IsA("TextButton") or obj:IsA("TextBox") then
+                    TweenService:Create(obj, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {TextTransparency = 1}):Play()
+                end
+                if obj:IsA("ImageLabel") or obj:IsA("ImageButton") then
+                    TweenService:Create(obj, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {ImageTransparency = 1}):Play()
+                end
+                if obj:IsA("Frame") then
+                    TweenService:Create(obj, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {BackgroundTransparency = 1}):Play()
+                end
+                if obj:IsA("UIStroke") then
+                    TweenService:Create(obj, TweenInfo.new(0.35, Enum.EasingStyle.Quart), {Transparency = 1}):Play()
+                end
+            end
+
+            TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {BackgroundTransparency = 1}):Play()
+            TweenService:Create(stroke, TweenInfo.new(0.4), {Transparency = 1}):Play()
+            TweenService:Create(blur, TweenInfo.new(0.5), {Size = 0}):Play()
+
+            task.delay(0.6, function()
+                screenGui:Destroy()
+                blur:Destroy()
+            end)
         end)
     end
 
     local function showError(msg)
         isVerifying = false
+        spinnerTween:Cancel()
         spinner.Visible = false
         verifyBtn.Text = "Verify Key"
         statusLabel.Text = msg
@@ -483,18 +551,13 @@ function KeySystem:Create()
         isVerifying = true
         verifyBtn.Text = ""
         spinner.Visible = true
+        spinner.Rotation = 0
+        spinnerTween:Play()
         statusLabel.Text = "Verifying key..."
         statusLabel.TextColor3 = Color3.fromRGB(150, 160, 170)
 
-        local spinConnection
-                local angle = 0
-        spinConnection = RunService.RenderStepped:Connect(function(dt)
-            angle = angle + dt * 400
-            spinnerCircle.Rotation = angle
-        end)
-
         task.delay(1.5, function()
-            spinConnection:Disconnect()
+            spinnerTween:Cancel()
             if key == KeySystem.Config.Key then
                 showSuccess()
             else
@@ -515,6 +578,9 @@ function KeySystem:Create()
                 child.ImageTransparency = 1
             end
         end
+        if child:IsA("Frame") and child ~= content then
+            child.BackgroundTransparency = 1
+        end
     end
     title.TextTransparency = 1
     subtitle.TextTransparency = 1
@@ -522,6 +588,10 @@ function KeySystem:Create()
     verifyBtn.TextTransparency = 1
     getKeyBtn.TextTransparency = 1
     textBox.TextTransparency = 1
+    nameLabel.TextTransparency = 1
+    usernameLabel.TextTransparency = 1
+    statusDot.BackgroundTransparency = 1
+    avatarStroke.Transparency = 1
 
     local openTween = TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
         BackgroundTransparency = 0.15,
@@ -534,7 +604,7 @@ function KeySystem:Create()
         TweenService:Create(stroke, TweenInfo.new(0.6), {Transparency = 0.7}):Play()
     end)
 
-    local elements = {title, subtitle, verifyBtn, getKeyBtn, textBox, statusLabel, logoContainer, logoIcon, keyIcon}
+    local elements = {avatarContainer, avatarImage, avatarStroke, statusDot, nameLabel, usernameLabel, title, subtitle, verifyBtn, getKeyBtn, textBox, statusLabel, keyIcon}
     for i, el in ipairs(elements) do
         task.delay(0.1 + (i * 0.05), function()
             if el:IsA("TextLabel") or el:IsA("TextButton") or el:IsA("TextBox") then
@@ -543,8 +613,11 @@ function KeySystem:Create()
             if el:IsA("ImageLabel") or el:IsA("ImageButton") then
                 TweenService:Create(el, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {ImageTransparency = 0}):Play()
             end
-            if el == logoContainer then
-                TweenService:Create(el, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {BackgroundTransparency = 0.85}):Play()
+            if el:IsA("Frame") then
+                TweenService:Create(el, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {BackgroundTransparency = el.Name == "StatusDot" and 0 or 0.85}):Play()
+            end
+            if el:IsA("UIStroke") then
+                TweenService:Create(el, TweenInfo.new(0.4, Enum.EasingStyle.Quart), {Transparency = 0.3}):Play()
             end
         end)
     end
