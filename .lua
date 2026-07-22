@@ -180,7 +180,8 @@ local CenterPanel = createPanel("CenterPanel", UDim2.new(0, 220, 1, 0), 2)
 local CenterLayout = Instance.new("UIListLayout")
 CenterLayout.FillDirection = Enum.FillDirection.Vertical
 CenterLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-CenterLayout.VerticalAlignment = Enum.VerticalAlignment.SpaceBetween
+CenterLayout.VerticalAlignment = Enum.VerticalAlignment.Center -- DIUBAH DARI SpaceBetween KE Center
+CenterLayout.Padding = UDim.new(0, 12) -- MENAMBAHKAN PADDING RAPI
 CenterLayout.Parent = CenterPanel
 
 local TitleFrame = Instance.new("Frame")
@@ -192,7 +193,7 @@ local KeyIcon = Instance.new("ImageLabel")
 KeyIcon.Size = UDim2.new(0, 18, 0, 18)
 KeyIcon.Position = UDim2.new(0, 8, 0, 7)
 KeyIcon.BackgroundTransparency = 1
-KeyIcon.Image = "rbxassetid://6031082533" -- Icon Lock/Key
+KeyIcon.Image = "rbxassetid://6031082533"
 KeyIcon.ImageColor3 = Color3.fromRGB(140, 245, 170)
 KeyIcon.Parent = TitleFrame
 
@@ -281,7 +282,7 @@ RightLayout.Parent = RightPanel
 local CrownIcon = Instance.new("ImageLabel")
 CrownIcon.Size = UDim2.new(0, 28, 0, 28)
 CrownIcon.BackgroundTransparency = 1
-CrownIcon.Image = "rbxassetid://6031068426" -- Premium Crown Icon
+CrownIcon.Image = "rbxassetid://6031068426"
 CrownIcon.ImageColor3 = Color3.fromRGB(140, 245, 170)
 CrownIcon.Parent = RightPanel
 
@@ -323,18 +324,17 @@ TweenService:Create(MainFrame, TweenInfo.new(0.6, Enum.EasingStyle.Back, Enum.Ea
     Size = targetSize
 }):Play()
 
--- Continuous UIGradient Animation (Efect Glowing & Alive)
+-- Continuous UIGradient Animation
 local gradientRotation = 0
 RunService.RenderStepped:Connect(function(dt)
     gradientRotation = (gradientRotation + dt * 25) % 360
     MainUIGradient.Rotation = gradientRotation
     
-    -- Pulse effect ringan pada stroke utama
     local pulse = (math.sin(tick() * 3) + 1) / 2
     MainUIStroke.Transparency = 0.3 + (pulse * 0.3)
 end)
 
--- Hover & Click Effect pada Enter Button
+-- Hover & Click Effect
 EnterButton.MouseEnter:Connect(function()
     TweenService:Create(EnterButton, TweenInfo.new(0.2), {
         BackgroundColor3 = Color3.fromRGB(60, 190, 115)
@@ -374,16 +374,13 @@ EnterButton.MouseButtonClick:Connect(function()
         return
     end
 
-    -- Feedback Efek Tombol saat ditekan
     EnterButton.Text = "CHECKING..."
     task.wait(0.6)
 
-    -- Contoh Validasiederhana (Ubah key "PREMIUM123" sesuai kebutuhan Anda)
     if enteredKey == "PREMIUM123" or enteredKey ~= "" then
         EnterButton.Text = "VALID KEY!"
         EnterButton.BackgroundColor3 = Color3.fromRGB(40, 200, 100)
         
-        -- Animasi Outro (Close UI)
         task.wait(0.8)
         local closeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
             Size = UDim2.new(0, 0, 0, 0)
@@ -392,7 +389,6 @@ EnterButton.MouseButtonClick:Connect(function()
         closeTween.Completed:Connect(function()
             ScreenGui:Destroy()
             print("Key Accepted! Script Executed.")
-            -- Tempatkan script utama Anda di sini
         end)
     end
 end)
